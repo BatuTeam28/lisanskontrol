@@ -1,17 +1,34 @@
-try:
-    with open("NewTik.py", "r") as f:
-        takip_raw = f.read()
-except FileNotFoundError:
-    takip_raw = "KAPALI"  # dosya yoksa default açık yapabilirsin
+import requests
+import sys
 
-if takip_raw.strip().upper() == "KAPALI":
-    sys.exit()
+TAKIP_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/NewTik.py"
+
+def takip_kontrol():
+    try:
+        response = requests.get(TAKIP_URL, timeout=5)
+        response.raise_for_status()
+        durum = response.text.strip().upper()
+        if durum == "KAPALI":
+            print("\n[!] API KAPANDI, Program kapanıyor.")
+            sys.exit()
+        elif durum == "ACIK":
+            print("\n[✓] API AÇIK, Program devam ediyor.")
+        else:
+            print("\n[!] API Durumu bilinmiyor, program kapatılıyor.")
+            sys.exit()
+    except Exception as e:
+        print(f"\n[×] API’ye erişilemiyor: {e}")
+        sys.exit()
+
+if __name__ == "__main__":
+    takip_kontrol()
+    # Buraya toolunun devam eden ana kodu gelir
+    print("Tool çalışıyor...")
 import requests,re,random,os,sys
 from rich import print as g
 from rich.panel import Panel
 from cfonts import render, say
 from threading import Thread
-#اللوان البرمجة
 R = '\033[1;31;40m'  
 X = '\033[1;33;40m'  
 F = '\033[1;32;40m'  
