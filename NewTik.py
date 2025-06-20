@@ -26,6 +26,13 @@ def api_kontrol():
     except Exception as e:
         print(f"\n[×] API kontrol edilemedi. Hata: {e}")
         sys.exit()
+
+# Fonksiyon tanımlandıktan sonra burda çağır
+api_kontrol()
+
+print("[✔] Tool başarıyla başlatıldı! Devam ediliyor...")
+
+# Tool ana kodu buradan devam eder...
 import requests,re,random,os,sys
 from rich import print as g
 from rich.panel import Panel
@@ -47,15 +54,6 @@ P = '\x1b[1;97m'
 H = '\x1b[1;92m'
 K = '\x1b[1;93m'
 
-print(f"\x1b[1;31m•{a9}" * 60)
-oi = render('BATU      TIKTOK       VIP',
-                        colors=['white', 'red'], align='center')
-print(oi)
-print(f"\x1b[1;31m•{a9}" * 60)
-print(" ~ By : @BatuX28")
-print(f"\x1b[1;31m•{a9}" * 60)
-
-print(X + '')
 nnn = random.choice([R,X,F,B,K,V])
 good_hot,bad_hot,good_ig,bad_ig,check,mj,ids=0,0,0,0,0,0,[]
 
