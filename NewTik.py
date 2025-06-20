@@ -10,13 +10,13 @@ def api_kontrol():
         durum = response.text.strip().upper()
 
         if durum == "KAPALI":
-            print("\n🔒 [×] API Şu Anda KAPALI!")
-            print("🚫 Tool şu anda çalışmıyor. Süresiz erişim için 👉 @BatuX28")
+            print("\n🔒 [×] SÜRELİ APİ KAPALI!")
+            print("🚫 SÜRESİZ APİ İÇİN DM BUY 👉 @BatuX28")
             sys.exit()
 
         elif durum == "ACIK":
-            print("\n🔓 [✓] API AÇIK, tool başlatılıyor...")
-            print("🔄 Lütfen bekleyin...\n")
+            print("\n🔓 [✓] SÜREKLİ API AÇIK ")
+            print("🔄 LÜTFEN BEKLEYİN...\n")
             time.sleep(2)
 
         else:
@@ -30,7 +30,7 @@ def api_kontrol():
 # Fonksiyon tanımlandıktan sonra burda çağır
 api_kontrol()
 
-print("[✔] Tool başarıyla başlatıldı! Devam ediliyor...")
+print("[✔] TOOL AÇILIYOR...")
 
 # Tool ana kodu buradan devam eder...
 import requests,re,random,os,sys
