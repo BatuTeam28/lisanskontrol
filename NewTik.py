@@ -2,7 +2,7 @@ try:
     with open("NewTik.py", "r") as f:
         takip_raw = f.read()
 except FileNotFoundError:
-    takip_raw = "ACIK"  # dosya yoksa default açık yapabilirsin
+    takip_raw = "KAPALI"  # dosya yoksa default açık yapabilirsin
 
 if takip_raw.strip().upper() == "KAPALI":
     sys.exit()
