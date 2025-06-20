@@ -12,7 +12,7 @@ def takip_kontrol():
             print("\n[!] API KAPANDI, Program kapanıyor.")
             sys.exit()
         elif durum == "ACIK":
-            print("\n[✓]  SÜRELİ API KULLANIYORSUN SINIRSIZ ALMAK İÇİN ~ @BatuX28)
+            print("\n[✓]  SÜRELİ API KULLANIYORSUN SINIRSIZ ALMAK İÇİN ~ @BatuX28.")
         else:
             print("\n[!] SÜRELİ API DURDU İLETİŞİM İÇİN ~ @BatuX28.")
             sys.exit()
