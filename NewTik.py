@@ -1,3 +1,5 @@
+if takip_raw.strip().upper() == "KAPALI":
+    sys.exit()
 import requests,re,random,os,sys
 from rich import print as g
 from rich.panel import Panel
