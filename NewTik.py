@@ -1,29 +1,31 @@
 import requests
 import sys
+import time
 
-TAKIP_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/NewTik.py"
+API_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
 
-def takip_kontrol():
+def api_kontrol():
     try:
-        response = requests.get(TAKIP_URL, timeout=5)
-        response.raise_for_status()
+        response = requests.get(API_URL, timeout=5)
         durum = response.text.strip().upper()
-        if durum == "KAPALI":
-            print("\n[!] API KAPANDI, Program kapanıyor.")
-            sys.exit()
-        elif durum == "ACIK":
-            print("\n[✓]  SÜRELİ API KULLANIYORSUN SINIRSIZ ALMAK İÇİN ~ @BatuX28.")
-        else:
-            print("\n[!] SÜRELİ API DURDU İLETİŞİM İÇİN ~ @BatuX28.")
-            sys.exit()
-    except Exception as e:
-        print(f"\n[×] API’ye erişilemiyor: {e}")
-        sys.exit()
 
-if __name__ == "__main__":
-    takip_kontrol()
-    # Buraya toolunun devam eden ana kodu gelir
-    print("Tool çalışıyor...")
+        if durum == "KAPALI":
+            print("\n🔒 [×] API Şu Anda KAPALI!")
+            print("🚫 Tool şu anda çalışmıyor. Süresiz erişim için 👉 @BatuX28")
+            sys.exit()
+
+        elif durum == "ACIK":
+            print("\n🔓 [✓] API AÇIK, tool başlatılıyor...")
+            print("🔄 Lütfen bekleyin...\n")
+            time.sleep(2)
+
+        else:
+            print("\n[!] Hatalı API durumu. GitHub 'durum.txt' dosyasını kontrol et!")
+            sys.exit()
+
+    except Exception as e:
+        print(f"\n[×] API kontrol edilemedi. Hata: {e}")
+        sys.exit()
 import requests,re,random,os,sys
 from rich import print as g
 from rich.panel import Panel
