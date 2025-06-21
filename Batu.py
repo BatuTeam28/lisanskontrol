@@ -1,3 +1,44 @@
+import requests
+import sys
+import time
+import os
+import re
+import json
+import string
+import random
+import hashlib
+import uuid
+from datetime import datetime
+from threading import Thread, Timer
+from requests import post as pp
+from user_agent import generate_user_agent
+from random import choice, randrange
+from cfonts import render
+from colorama import Fore, Style, init
+
+# API Durum Kontrol
+API_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
+
+def api_kontrol():
+    try:
+        response = requests.get(API_URL, timeout=5)
+        durum = response.text.strip().upper()
+        if durum == "KAPALI":
+            print("\n🔒 [×] SÜRELİ APİ KAPALI!")
+            print("🚫 SÜRESİZ APİ İÇİN DM BUY 👉 @BatuX28")
+            sys.exit()
+        elif durum == "ACIK":
+            print("\n🔓 [✓] SÜREKLİ API AÇIK ")
+            print("🔄 LÜTFEN BEKLEYİN...\n")
+            time.sleep(2)
+        else:
+            print("\n[!] Hatalı API durumu. GitHub 'durum.txt' dosyasını kontrol et!")
+            sys.exit()
+    except Exception as e:
+        print(f"\n[×] API kontrol edilemedi. Hata: {e}")
+        sys.exit()
+
+api_kontrol()
 import os
 import sys
 import re
