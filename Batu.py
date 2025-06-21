@@ -329,18 +329,17 @@ def date(hy):
     except Exception:
         pass
 def InfoAcc(username, domain):
-global total_hits
-account_info = infoinsta.get(username, {})
-user_id = account_info.get('pk')
-full_name = account_info.get('full_name')
-followers = account_info.get('follower_count', 0)
-following = account_info.get('following_count')
-posts = account_info.get('media_count')
-bio = account_info.get('biography')
-meta_status = "meta aktif ✅" if followers > 99 else "aktif degil ✖️"
-total_hits += 1
-info_text = f"""
-𝙃𝙄 𝙄 𝙂𝙀𝙏 𝙉𝙀𝙒 𝙃𝙄𝙏
+    global total_hits
+    account_info = infoinsta.get(username, {})
+    user_id = account_info.get('pk')
+    full_name = account_info.get('full_name')
+    followers = account_info.get('follower_count', 0)
+    following = account_info.get('following_count')
+    posts = account_info.get('media_count')
+    bio = account_info.get('biography')
+    meta_status = "meta aktif ✅" if followers > 99 else "aktif degil ✖️"
+    total_hits += 1
+    info_text = f"""
 ⋘─────━𓆩𝘽𝙖𝙩𝙪𓆪‏━─────⋙
 🇹🇷 𝐇𝐈𝐓 : {total_hits}
 🇹🇷 𝐈𝐒𝐈𝐌 : {username}
@@ -355,10 +354,10 @@ info_text = f"""
 𝙋𝙮 - @BatuX28 ~ @BatuKumar_Bot
 «————————————»
 """ 
-
-
     try:
-        requests.get(f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={info_text}")
+        requests.get(
+            f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={info_text}"
+        )
     except Exception:
         pass
 
