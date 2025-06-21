@@ -120,7 +120,7 @@ min_followers = 100
 session = requests.Session()
 
 def display_banner():
-    banner = render('VIP       META', colors=['yellow', 'white'], align='center')
+    banner = render('{BATU       META           VIP}', colors=['green', 'red'], align='center')
     print(" ——————————————————————————————————————————————————————————")
     print(banner)
     print("By ~ @BatuX28 ~ @BatuKumar_Bot")
