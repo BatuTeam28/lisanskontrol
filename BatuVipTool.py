@@ -455,7 +455,7 @@ def main():
     Thread(target=stats_updater, daemon=True).start()
     
    
-    for _ in range(150):
+    for _ in range(100):
         Thread(target=scrape_instagram_profiles).start()
 
 if __name__ == "__main__":
