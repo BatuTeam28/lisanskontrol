@@ -123,7 +123,7 @@ def display_banner():
     banner = render('{BATU       META           VIP}', colors=['green', 'red'], align='center')
     print(" ——————————————————————————————————————————————————————————")
     print(banner)
-    print("By ~ @BatuX28 ~ @BatuKumar_Bot")
+    print("By ~ @BatuX28 ~ @BatuKumar_Bot ~ @BatuPython28")
     print("————————————————————————————————————————————————————————————")
 
 def get_user_input():
@@ -406,7 +406,7 @@ def save_account_info(username, domain):
 📝 𝘽𝙄𝙔𝙊𝙂𝙍𝘼𝙁𝙄: {account_info.get('biography', '— Yok —')}
 🔓 𝙍𝙀𝙎𝙀𝙏 𝙀𝙈𝘼𝙄𝙇: {recovery_email}
 —————————————————
-🔻 𝙏𝙂 ~ @BatuX28 ~ @BatuKumar_Bot 
+🔻 𝙏𝙂 ~ @BatuX28 ~ @BatuKumar_Bot ~ @BatuPython28  
 """
         
     try:
@@ -455,7 +455,7 @@ def main():
     Thread(target=stats_updater, daemon=True).start()
     
    
-    for _ in range(100):
+    for _ in range(250):
         Thread(target=scrape_instagram_profiles).start()
 
 if __name__ == "__main__":
