@@ -67,7 +67,7 @@ import pyfiglet
 from colorama import Fore, init
 from cfonts import render
 print("\n\n")
-kopmk = render('NEW           +100      META', colors=['white', 'red'], align='center')
+kopmk = render('NEW           +50     META', colors=['white', 'red'], align='center')
 print(kopmk)
 print("\n")
 print("_______________________________________________________________")
@@ -364,7 +364,7 @@ def InfoAcc(username, domain):
         followers = int(followers)
     except:
         followers = 0
-    if followers < 100 :
+    if followers < 50 :
         return  
 
     following = account_info.get('following_count', '')
@@ -406,7 +406,7 @@ def durdurulmaz_python():
             username = account.get('username')
             if username:
                 followers = account.get('follower_count', 0)
-                if followers < 100:  
+                if followers < 50:  
                     continue
                 infoinsta[username] = account
                 email = username + API_CONFIG["durdurulmaz_domain"]
