@@ -1,3 +1,22 @@
+# GitHub RAW linki ile durum.txt kontrolü
+DURUM_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
+
+def durum_kontrol():
+    try:
+        headers = {"User-Agent": "Mozilla/5.0"}
+        response = requests.get(DURUM_URL, headers=headers, timeout=5)
+        response.raise_for_status()
+        durum = response.text.strip().upper()
+
+        if durum == "KAPALI":
+            print(Fore.RED + "\n[!] TOLUN APİSİ KAPALİ ALMAK İÇİN: @BatuX28")
+            sys.exit()
+    except requests.exceptions.RequestException:
+        print(Fore.RED + "\n[×] Durum dosyasına erişilemedi! Bağlantı hatası.")
+        sys.exit(1)
+
+
+
 import os
 import sys
 import re
