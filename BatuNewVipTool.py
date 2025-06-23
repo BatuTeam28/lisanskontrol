@@ -1,3 +1,46 @@
+import requests
+import sys
+import time
+import os
+import re
+import json
+import string
+import random
+import hashlib
+import uuid
+from datetime import datetime
+from threading import Thread, Timer
+from requests import post as pp
+from user_agent import generate_user_agent
+from random import choice, randrange
+from cfonts import render
+from colorama import Fore, Style, init
+
+# API Durum Kontrol
+API_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
+
+def api_kontrol():
+    try:
+        response = requests.get(API_URL, timeout=5)
+        durum = response.text.strip().upper()
+        if durum == "KAPALI":
+            print("\n🔒 [×] SÜRELİ APİ KAPALI!")
+            print("🚫 SÜRESİZ APİ İÇİN DM BUY 👉 @BatuX28")
+            sys.exit()
+        elif durum == "ACIK":
+            print("\n🔓 [✓] SÜREKLİ API AÇIK ")
+            print("🔄 LÜTFEN BEKLEYİN...\n")
+            time.sleep(2)
+        else:
+            print("\n[!] Hatalı API durumu. GitHub 'durum.txt' dosyasını kontrol et!")
+            sys.exit()
+    except Exception as e:
+        print(f"\n[×] API kontrol edilemedi. Hata: {e}")
+        sys.exit()
+
+api_kontrol()
+
+
 import os
 import requests
 import time
@@ -15,16 +58,16 @@ from user_agent import generate_user_agent
 import threading
 import webbrowser
 os.system('clear')
-logo = render('''BATU VİP TooL''', font='block', colors=['blue', 'white'], align='center', space=True)
+logo = render('''BATU         NEW       TOOL''', font='block', colors=['blue', 'white'], align='center', space=True)
 print("═" * 50 + "\033[0m")
 print(logo)
 print("""      🌐𝐓𝐄𝐋𝐄𝐆𝐑𝐀𝐌: @BatuX28   📡 𝐊𝐀𝐍𝐀𝐋 : @BatuPython28""")
 
 print("═" * 50 + "\033[0m")
-TELEGRAM_BOT_TOKEN = input("\x1b[1;32m𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐁𝐨𝐭 𝐓𝐨𝐤𝐞𝐧 𝐆𝐢𝐫𝐢𝐧 : \x1b[1;33m")
+TELEGRAM_BOT_TOKEN = input("\x1b[1;32m𝐓𝐨𝐤𝐞𝐧 𝐆𝐢𝐫 : \x1b[1;33m")
 print("═" * 47 + "\033[0m")
-TELEGRAM_CHAT_ID = input("\x1b[1;32m𝐓𝐞𝐥𝐞𝐠𝐫𝐚𝐦 𝐈𝐝 𝐆𝐢𝐫𝐢𝐧 : \x1b[1;33m")
-takipcisec = int(input("minimom takipci gir: "))
+TELEGRAM_CHAT_ID = input("\x1b[1;32m𝙞𝐝 𝐆𝐢𝐫 : \x1b[1;33m")
+takipcisec = int(input("𝙈𝙞𝙣𝙞𝙢𝙪𝙣 𝙏𝙖𝙠𝙞𝙥𝙘𝙞 𝙂𝙞𝙧𝙚𝙧𝙢𝙞𝙨𝙞𝙣 : "))
 
 time.sleep(1.5)
 os.system("clear")
@@ -130,7 +173,7 @@ def instagram_bilgi_cek(user_id, email):
         mesaj = f"""
 𓊆 𝐈𝐧𝐬𝐭𝐚 𝐇𝐢𝐭 𝐃ü𝐬𝐭ü 𝐁𝐫ø 𓊇
 ──────────────────────
-🔥 𝐇𝐈𝐓 : True
+🔥 𝐇𝐈𝐓 : {aca}
 🛐 𝐊𝐔𝐋𝐋𝐀𝐍𝐈𝐂𝐈 𝐀𝐃𝐈 : @{username}
 📛 𝐀𝐃 : {full_name}
 📧 𝐄𝐌𝐀İ𝐋 : {email}
@@ -144,7 +187,7 @@ def instagram_bilgi_cek(user_id, email):
 🖼️ 𝐏𝐑𝐎𝐅İL 𝐑𝐄𝐒Mİ : {profile_pic}
 📡 𝐊𝐀𝐍𝐀𝐋 : @BatuPython28
 ──────────────────────
-🌐 𝐓𝐄𝐋𝐄𝐆𝐑𝐀𝐌: @BatuX28
+🌐 𝐓𝐄𝐋𝐄𝐆𝐑𝐀𝐌: @BatuX28 ~ @BatuKumar_Bot ~ @BatuPython28
 """
         print(mesaj)
         telegrama_mesaj_gonder(mesaj)
@@ -250,12 +293,12 @@ def weoxarayuz(email):
     print("═" * 47 + "\033[0m")
 
     print(f'''
-\033[1;32m[✓] HİT INSTAGRAM : {hit_ig} 
-\033[1;33m[!] İYİ INSTAGRAM : {iyi_ig} 
-\033[1;31m[✗] KÖTÜ INSTAGRAM : {bad_ig}  
-\033[1;31m[✗] KÖTÜ GMAIL     : {bad_gm}
-\033[1;32m[✓] TOPLAM DENENEN : {toplam}       
-\033[1;36m[@] EMAIL          : {email}     
+\033[1;32m[✓] HİT : {hit_ig} 
+\033[1;33m[!] GOOD İG : {iyi_ig} 
+\033[1;31m[✗] BAD İG : {bad_ig}  
+\033[1;31m[✗] BAD GM : {bad_gm}
+\033[1;32m[✓] TOPLAM BAD : {toplam}       
+\033[1;36m[@] EMAIL : {email}     
 ''')
 
     print("\033[1;97m" + "═" * 47 + "\033[0m")	
@@ -298,5 +341,5 @@ def main():
                 weoxarayuz(email)                
         except Exception as weoxst:
             pass
-for weoxst in range(75):
+for weoxst in range(30):
     threading.Thread(target=main).start()
