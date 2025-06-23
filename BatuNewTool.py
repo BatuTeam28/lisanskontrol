@@ -1,19 +1,27 @@
-# GitHub RAW linki ile durum.txt kontrolü
-DURUM_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
+import requests
+import sys
+import time
 
-def durum_kontrol():
+API_STATUS_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
+
+def api_durum_kontrol():
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-        response = requests.get(DURUM_URL, headers=headers, timeout=5)
-        response.raise_for_status()
+        response = requests.get(API_STATUS_URL, timeout=5)
         durum = response.text.strip().upper()
-
         if durum == "KAPALI":
-            print(Fore.RED + "\n[!] TOLUN APİSİ KAPALİ ALMAK İÇİN: @BatuX28")
+            print("\n🔒 APİ KAPANDI TOOL ALMAK İÇİN : @BatuX28")
             sys.exit()
-    except requests.exceptions.RequestException:
-        print(Fore.RED + "\n[×] Durum dosyasına erişilemedi! Bağlantı hatası.")
-        sys.exit(1)
+        elif durum == "ACIK":
+            print("\n🔓 SÜRELİ APİ AÇIK AÇILIYOR LÜTFEN BEKİYİN...")
+            time.sleep(1)
+        else:
+            print("\n[!] API Durumu Hatalı! Dosyayı kontrol et.")
+            sys.exit()
+    except Exception as e:
+        print(f"\n[×] API durumu kontrol edilemedi: {e}")
+        sys.exit()
+
+api_durum_kontrol()
 
 
 
