@@ -120,10 +120,7 @@ def show_stats():
     be = good_ig            
      
     print(f"""
-╔════════════════════╗
-║   ✅ Hits : {ge:<5}     ║
-║   ❌ Bads : {bt:<5}     ║
-╚════════════════════╝
+✅ Hit : {ge:<5}  ❌ Bad : {bt:<5}
 """)
 
 def update_stats():
@@ -448,7 +445,7 @@ def main():
     Thread(target=stats_updater, daemon=True).start()
     
    
-    for _ in range(100):
+    for _ in range(30):
         Thread(target=scrape_instagram_profiles).start()
 
 if __name__ == "__main__":
