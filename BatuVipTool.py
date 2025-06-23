@@ -1,28 +1,29 @@
 import requests
 import sys
-from colorama import Fore
+import time
 
-# GitHub'dan durum.txt kontrolü
-DURUM_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
+API_STATUS_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
 
-def durum_kontrol():
+def api_durum_kontrol():
     try:
-        headers = {"User-Agent": "Mozilla/5.0"}
-        response = requests.get(DURUM_URL, headers=headers, timeout=5)
-        response.raise_for_status()
+        response = requests.get(API_STATUS_URL, timeout=5)
         durum = response.text.strip().upper()
-
         if durum == "KAPALI":
-            print(Fore.RED + "\n[!] Tool şu anda KAPALI! Daha fazla bilgi için: @BatuX28")
+            print("\n🔒 APİ KAPANDI TOOL ALMAK İÇİN : @BatuX28")
             sys.exit()
         elif durum == "ACIK":
-            print(Fore.GREEN + "[✓] Tool AÇIK durumda, devam ediliyor...\n")
+            print("\n🔓 SÜRELİ APİ AÇIK AÇILIYOR LÜTFEN BEKİYİN...")
+            time.sleep(1)
         else:
-            print(Fore.YELLOW + f"[!] 'durum.txt' içeriği geçersiz: {durum}")
+            print("\n[!] API Durumu Hatalı! Dosyayı kontrol et.")
             sys.exit()
     except Exception as e:
-        print(Fore.RED + f"[×] Durum kontrol hatası: {e}")
+        print(f"\n[×] API durumu kontrol edilemedi: {e}")
         sys.exit()
+
+api_durum_kontrol()
+
+# Buraya NewTik.py içindeki tool ana kodları gelecek
 import os
 import sys
 import re
