@@ -1,4 +1,8 @@
-# GitHub RAW linki ile durum.txt kontrolü
+import requests
+import sys
+from colorama import Fore
+
+# GitHub'dan durum.txt kontrolü
 DURUM_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum.txt"
 
 def durum_kontrol():
@@ -9,40 +13,16 @@ def durum_kontrol():
         durum = response.text.strip().upper()
 
         if durum == "KAPALI":
-            print(Fore.RED + "\n[!] TOLUN APİSİ KAPALİ ALMAK İÇİN: @BatuX28")
+            print(Fore.RED + "\n[!] Tool şu anda KAPALI! Daha fazla bilgi için: @BatuX28")
             sys.exit()
-    except requests.exceptions.RequestException:
-        print(Fore.RED + "\n[×] Durum dosyasına erişilemedi! Bağlantı hatası.")
-        sys.exit(1)
-
-
-
-
-import requests, os, webbrowser
-from datetime import datetime
-try:
-    import requests
-except ImportError:
-    os.system('pip install requests')
-    import requests
-import subprocess, sys
-
-def try_import(package, install_name=None):
-    try:
-        __import__(package)
-    except ImportError:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", install_name or package])
-
-external_modules = [
-    ("requests", None),
-    ("user_agent", "user-agent"),
-    ("cfonts", None),
-    ("colorama", None),
-]
-
-for mod_name, pip_name in external_modules:
-    try_import(mod_name, pip_name)
-
+        elif durum == "ACIK":
+            print(Fore.GREEN + "[✓] Tool AÇIK durumda, devam ediliyor...\n")
+        else:
+            print(Fore.YELLOW + f"[!] 'durum.txt' içeriği geçersiz: {durum}")
+            sys.exit()
+    except Exception as e:
+        print(Fore.RED + f"[×] Durum kontrol hatası: {e}")
+        sys.exit()
 import os
 import sys
 import re
