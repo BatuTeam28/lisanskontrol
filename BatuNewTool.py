@@ -359,6 +359,9 @@ def get_registration_year(user_id):
     else:
         return "2024 or 2025"
 
+import requests
+import urllib.parse
+
 def save_account_info(username, domain):
     global total_hits
     account_info = infoinsta.get(username, {})
@@ -394,9 +397,13 @@ def save_account_info(username, domain):
 —————————————————
 🔻 𝙏𝙂 ~ @BatuX28 ~ @BatuKumar_Bot ~ @BatuPython28
 """
-        
+
     try:
-        requests.get(f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={info_text}")
+        encoded_message = urllib.parse.quote_plus(message)
+        url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={encoded_message}"
+        response = requests.get(url)
+        if not response.ok:
+            print("Telegram API hatası:", response.text)
     except Exception as e:
         print("Telegram mesajı gönderilemedi:", e)
 
