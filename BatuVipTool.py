@@ -80,11 +80,11 @@ bad_email = 0
 good_ig = 0
 infoinsta = {}
 
-Lyrox_Logo = render('{ BATU       INSTA     TOOL}', colors=['white', 'blue'], align='center')
+Batu_Logo = render('{BATU       INSTA      TOOL}', colors=['white', 'blue'], align='center')
 print(f'''\n
   ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓   
      
-                      {Lyrox_Logo}
+                      {Batu_Logo}
       ~ Programmer : @BatuX28 | Channel: @BatuPython28 ~
  
    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛    
