@@ -322,6 +322,8 @@ def date(hy):
     except Exception:
         pass
 
+# ... önceki tüm kodlar (API kontrol, importlar vs) aynı kalıyor ...
+
 def InfoAcc(username, domain):
     global total_hits
     account_info = infoinsta.get(username, {})
@@ -331,7 +333,7 @@ def InfoAcc(username, domain):
     following = account_info.get('following_count') or 0
     posts = account_info.get('media_count') or 0
     bio = account_info.get('biography') or "Yok"
-    reset_status = rest(username)  # Mevcut reset fonksiyonunuz
+    reset_status = rest(username)
     meta_status = "✅ Mavi Tiket" if followers > 99 else "❌ Mavi Tiket Yok"
 
     total_hits += 1
@@ -354,11 +356,15 @@ def InfoAcc(username, domain):
 🌟 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿𝘀: @BatuX28 | @BatuPython28 | @BatuVip_Bot 🌟
 """
 
-    return info_text
     try:
-        requests.get(f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={info_text}")
-    except Exception:
-        pass
+        requests.get(
+            f"https://api.telegram.org/bot{TOKEN}/sendMessage",
+            params={"chat_id": ID, "text": info_text}
+        )
+    except Exception as e:
+        print(f"[!] Telegram gönderim hatası: {e}")
+    
+    return info_text
 
 def Lyrox_python():
     while True:
