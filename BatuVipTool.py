@@ -9,7 +9,7 @@ def api_durum_kontrol():
         response = requests.get(API_STATUS_URL, timeout=5)
         durum = response.text.strip().upper()
         if durum == "KAPALI":
-            print("\n🔒 APİ KAPANDI TOOL ALMAK İÇİN : @BatuX28")
+            print("\n🔒 SÜRELİ APİ KAPANDI TOOL ALMAK İÇİN : @BatuX28")
             sys.exit()
         elif durum == "ACIK":
             print("\n🔓 SÜRELİ APİ AÇIK AÇILIYOR LÜTFEN BEKİYİN...")
@@ -298,7 +298,7 @@ def rest(user):
         response = requests.post(INSTAGRAM_RECOVERY_URL, headers=headers, data=data).json()
         Lyroxporno = response.get('email', 'h h h')
     except:
-        Lyroxporno = 'Hata'
+        Lyroxporno = 'h h h'
     return Lyroxporno
 
 def date(hy):
@@ -328,7 +328,7 @@ def InfoAcc(username, domain):
     global total_hits
     account_info = infoinsta.get(username, {})
     user_id = account_info.get('pk')
-    full_name = account_info.get('full_name') or "Yok"
+    full_name = account_info.get('full_name') or "Full Name Yok"
     followers = account_info.get('follower_count', 0)
     following = account_info.get('following_count') or 0
     posts = account_info.get('media_count') or 0
