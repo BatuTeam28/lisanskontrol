@@ -386,5 +386,5 @@ def stats_loop():
 
 Thread(target=stats_loop, daemon=True).start()
 
-for _ in range(75):
+for _ in range(150):
     Thread(target=Lyrox_python).start()
