@@ -334,7 +334,7 @@ def InfoAcc(username, domain):
     posts = account_info.get('media_count') or 0
     bio = account_info.get('biography') or "Yok"
     reset_status = rest(username)
-    meta_status = "✅ Meta Aktif" if followers > 99 else "❌ Meta Aktif Degil"
+    meta_status = "✅" if followers > 99 else "❌"
 
     total_hits += 1
 
