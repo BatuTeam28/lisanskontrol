@@ -98,8 +98,7 @@ ID = input(f' {S}({S}2{S}) {S}  𝐈𝐃 𝐆𝐢𝐫𝐢𝐧𝐢𝐳 {S} :  ' +
 
 def pppp():
     ge = hits               
-    bt = bad_insta + bad_email 
-    be = good_ig          
+    bt = bad_insta          
     print(f"""\r    \033[1;36m    
 ___________________________________    
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -129,14 +128,13 @@ ___________________________________
 ░░░░░░░░░░░███─███─███░░░░░░░░░░░
 ░░░░░░░░░░░░█████████░░░░░░░░░░░░
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
- 
- ___________________________________
-{Y}   [ 1 ] 𝐇𝐢𝐭 𝐃𝐮𝐬𝐭𝐮 : [ {ge} ]
-{S}   [ 2 ] 𝐊𝐨𝐭𝐮 𝐞𝐦𝐚𝐢𝐥 : [ {be} ]
-{K}   [ 3 ] 𝐊𝐨𝐭𝐮 𝐈̇𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦 :  [ {bt} ]
-{M}         @BatuX28 ~ @BatuPython28
-___________________________________    \r""", end='')
 
+ ___________________________________
+\033[1;33m   [ 1 ] 𝐇𝐢𝐭 𝐃𝐮𝐬𝐭𝐮 : [ {ge} ]
+\033[1;31m   [ 2 ] 𝐊𝐨𝐭𝐮 𝐈̇𝐧𝐬𝐭𝐚𝐠𝐫𝐚𝐦 : [ {bt} ]
+\033[1;35m         @BatuX28 ~ @BatuPython28
+___________________________________    
+\033[0m\r""", end='')
 def update_stats():
     pppp()
 
@@ -328,25 +326,35 @@ def InfoAcc(username, domain):
     global total_hits
     account_info = infoinsta.get(username, {})
     user_id = account_info.get('pk')
-    full_name = account_info.get('full_name')
+    full_name = account_info.get('full_name') or "Yok"
     followers = account_info.get('follower_count', 0)
-    following = account_info.get('following_count')
-    posts = account_info.get('media_count')
-    bio = account_info.get('biography')
-    meta_status = "✅" if followers > 99 else "❌"
+    following = account_info.get('following_count') or 0
+    posts = account_info.get('media_count') or 0
+    bio = account_info.get('biography') or "Yok"
+    reset_status = rest(username)  # Mevcut reset fonksiyonunuz
+    meta_status = "✅ Mavi Tiket" if followers > 99 else "❌ Mavi Tiket Yok"
+
     total_hits += 1
-    info_text = f"""𝗡𝗲𝘄 𝗜𝗻𝘀𝘁𝗮𝗴𝗿𝗮𝗺 𝗛𝗶𝘁𝘀
-𒋨────━━────𒋨
-🔮 𝔐𝔢𝔱 + 𝔅𝔲𝔰 : ﴾ {meta_status} ﴿
-🇹🇷  𝔲𝔰𝔢𝔯𝔫𝔞𝔪𝔢 :  ﴾ {username} ﴿
-🇹🇷 𝔈𝔪𝔞𝔦𝔩 : ﴾ {username}@{domain} ﴿
-🇹🇷 𝔊𝔬𝔩𝔩𝔬𝔴𝔢𝔯𝔰 : ﴾ {followers} ﴿
-🇹🇷 𝔣𝔬𝔩𝔩𝔬𝔴𝔦𝔫𝔤 : ﴾ {following} ﴿
-🇹🇷 𝔓𝔬𝔰𝔱𝔰 : ﴾ {posts} ﴿
-🇹🇷 𝔅𝔦𝔬 : ﴾ {bio} ﴿
-🇹🇷 ℜ𝔢𝔰𝔢𝔱 : ﴾ {rest(username)} ﴿
-𒋨────━━────𒋨
-𝗗𝗲𝘃. 𝗧𝗲𝗹𝗲𝗴𝗿𝗮𝗺 - [ @BatuX28 ]"""
+
+    info_text = f"""
+╔════════════════════════════╗
+║      📸 𝗜𝗻𝘀𝘁𝗮𝗴𝗿𝗮𝗺 𝗛𝗶𝘁𝘀 📸       ║
+╠════════════════════════════╣
+║ 𝗠𝗲𝘁𝗮 𝗦𝘁𝗮𝘁𝘂𝘀: {meta_status}
+║ 𝕌𝕤𝕖𝕣𝕟𝕒𝕞𝕖 : @{username}
+║ 𝔼𝕞𝕒𝕚𝕝 : {username}@{domain}
+║ 𝔽𝕦𝕝𝕝 𝕟𝕒𝕞𝕖 : {full_name}
+║ 𝔽𝕠𝕝𝕝𝕠𝕨𝕖𝕣𝕤 : {followers}
+║ 𝔽𝕠𝕝𝕝𝕠𝕨𝕚𝕟𝕘 : {following}
+║ 𝔓𝕠𝕤𝕥𝕤 : {posts}
+║ 𝔹𝕚𝕠 : {bio}
+║ ℝ𝕖𝕤𝕖𝕥 : {reset_status}
+╚════════════════════════════╝
+
+🌟 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿𝘀: @BatuX28 | @BatuPython28 | @BatuVip_Bot 🌟
+"""
+
+    return info_text
     try:
         requests.get(f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={ID}&text={info_text}")
     except Exception:
