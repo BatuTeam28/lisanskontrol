@@ -353,7 +353,7 @@ def InfoAcc(username, domain):
 ║ ℝ𝕖𝕤𝕖𝕥 : {reset_status}
 ╚════════════════════════════╝
 
-🌟 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿𝘀: @BatuX28 | @BatuPython028 | @BatuVip_Bot 🌟
+🌟 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿𝘀: @BatuX28 | https://t.me/BatuPython028 | @BatuVip_Bot 🌟
 """
 
     try:
