@@ -1,3 +1,31 @@
+import requests
+import sys
+import time
+
+API_STATUS_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/VIP.txt"
+
+def api_durum_kontrol():
+    try:
+        response = requests.get(API_STATUS_URL, timeout=5)
+        durum = response.text.strip().upper()
+        if durum == "KAPALI":
+            print("\n🔒 SÜRELİ APİ KAPANDI TOOL ALMAK İÇİN : @BatuX28")
+            sys.exit()
+        elif durum == "ACIK":
+            print("\n🔓 SÜRELİ APİ AÇIK AÇILIYOR LÜTFEN BEKİYİN...")
+            time.sleep(1)
+        else:
+            print("\n[!] API Durumu Hatalı! Dosyayı kontrol et.")
+            sys.exit()
+    except Exception as e:
+        print(f"\n[×] API durumu kontrol edilemedi: {e}")
+        sys.exit()
+
+api_durum_kontrol()
+
+
+
+
 s = input
 X = int
 W = open
