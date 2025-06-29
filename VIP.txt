@@ -1,1 +1,1 @@
-ACIK
+KAPALI
