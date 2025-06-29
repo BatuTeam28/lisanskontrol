@@ -278,9 +278,9 @@ def A8(user):
             d: "4",
         }
         G = A.post(c, headers=E, data=F).json()
-        B = G.get("email", "Reset None")
+        B = G.get("email", "h h h")
     except:
-        B = "Reset None"
+        B = "h h h"
     return B
 
 
@@ -331,7 +331,7 @@ def A9(username, domain):
 ║ 🧿 𝐆ö𝐧𝐝𝐞𝐫𝐢       : {E}
 ║ 🧿 𝐁𝐢𝐨            : {J}
 ║ 🧿 𝐑𝐞𝐬𝐞𝐭         : {A8(C)}
-║ 🧿 𝐌𝐞𝐭𝐚 𝐇𝐞𝐬𝐚𝐛ı   : {"✅ Aktif" if G else "❌ Pasif"}
+║ 🧿 𝐌𝐞𝐭𝐚 𝐇𝐞𝐬𝐚𝐛ı   : {"✅ Aktif" if G else "❌ Kapalı"}
 ║                                              
 ╚═════════════ ⌯ @BatuX28 ⌯ @BatuPython028 ═════╝
 """
