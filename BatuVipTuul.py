@@ -2,7 +2,7 @@ import requests
 import sys
 import time
 
-API_STATUS_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/VIP.txt"
+API_STATUS_URL = "https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum2.txt"
 
 def api_durum_kontrol():
     try:
