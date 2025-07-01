@@ -130,12 +130,13 @@ from shutil import get_terminal_size
 console = Console()
 
 def J():
-    width = get_terminal_size().columns
-    content = f"[bold green]🔥 IG Hit:[/bold green] [white]{U}[/white]\n[bold red]❌ Bad IG:[/bold red] [white]{S}{H}[/white]"
-    panel = Panel(content, title="[cyan]📊 STATISTICS[/cyan]", border_style="bright_magenta", padding=(1, 5))
-    
-    console.clear()  # Ekranı temizle
-    console.print(panel, justify="center")
+    A = (
+        f"\r{T3}[🔥 Hits   ]: {R}{I}    "
+        f"{K1I}[❌ Bad IG ]: {I}{S}{H}    "
+        f""
+    )
+    sys.stdout.write(A)
+    sys.stdout.flush()
 
 
 def r():
