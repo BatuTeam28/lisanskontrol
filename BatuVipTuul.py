@@ -130,11 +130,7 @@ from shutil import get_terminal_size
 console = Console()
 
 def J():
-    A = (
-        f"\r{T3}[🔥 Hits   ]: {R}{I}    "
-        f"{K1I}[❌ Bad IG ]: {I}{S}{H}    "
-        f""
-    )
+    A = f"\r{T3}Hits{T3} : {R}{I} |{K1I} Bad IG{K1I} : {I}{S}{H} | {MOR}Bad Email{MOR} : {I}{T}{B} | {SA5}Good IG{SA5} : {I}{U}"
     sys.stdout.write(A)
     sys.stdout.flush()
 
