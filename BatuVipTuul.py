@@ -352,7 +352,7 @@ def A9(username, domain):
         pass
 
 
-AA = 10
+AA = 50
 
 
 def AB():
