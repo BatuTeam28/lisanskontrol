@@ -123,10 +123,19 @@ except F:
     pass
 
 
+from rich.console import Console
+from rich.panel import Panel
+from shutil import get_terminal_size
+
+console = Console()
+
 def J():
-    A = f"\r{T3}Hits{T3} : {R}{I} |{K1I} Bad IG{K1I} : {I}{S}{H} | {MOR}Bad Email{MOR} : {I}{T}{B} | {SA5}Good IG{SA5} : {I}{U}"
-    sys.stdout.write(A)
-    sys.stdout.flush()
+    width = get_terminal_size().columns
+    content = f"[bold green]🔥 IG Hit:[/bold green] [white]{U}[/white]\n[bold red]❌ Bad IG:[/bold red] [white]{S}{H}[/white]"
+    panel = Panel(content, title="[cyan]📊 STATISTICS[/cyan]", border_style="bright_magenta", padding=(1, 5))
+    
+    console.clear()  # Ekranı temizle
+    console.print(panel, justify="center")
 
 
 def r():
@@ -382,5 +391,5 @@ def AB():
             pass
 
 
-for _ in K(50):
+for _ in K(150):
     u(target=AB).start()
