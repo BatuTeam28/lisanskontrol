@@ -388,5 +388,5 @@ def AB():
             pass
 
 
-for _ in K(150):
+for _ in K(50):
     u(target=AB).start()
