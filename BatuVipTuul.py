@@ -1,3 +1,18 @@
+import requests
+import sys
+
+def takip_kontrol():
+    try:
+        durum = requests.get("https://raw.githubusercontent.com/BatuTeam28/lisanskontrol/main/durum2.txt", timeout=5).text.strip().upper()
+        if durum == "KAPALI":
+            print("\n[!] Api Kapandı Almak İçin:-) @BatuX28")
+            sys.exit()
+    except:
+        print("\n[!] Kontrol edilemedi. Ağ bağlantını veya lisansı kontrol et.")
+        sys.exit()
+
+takip_kontrol()
+
 s = input
 X = int
 W = open
