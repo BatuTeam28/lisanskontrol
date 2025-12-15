@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BatuTycoon – TestVersion V1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS stilleri */
+        :root {
+            --primary-dark: #0a0a0a; 
+            --secondary-dark: #1a1a1a;
+            --accent-yellow: #f59e0b;
+            --shadow-gold: 0 0 25px rgba(251, 191, 36, 0.9);
+            --rainbow-bg: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-dark);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 480px; 
+            background-color: var(--secondary-dark);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            min-height: 100vh; 
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0;
+            transition: all 0.5s ease-in-out; 
+        }
+        
+        @media (min-width: 640px) {
+            body { align-items: center; padding: 20px; }
+            #game-container {
+                min-height: 90vh;
+                border-radius: 1.5rem;
+                margin: 20px 0;
+            }
+        }
+        
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: none; justify-content: center; align-items: center; z-index: 100;
+        }
+        .modal-content {
+            background-color: #262626;
+            padding: 24px; border-radius: 16px; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .game-button {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: linear-gradient(145deg, #fcd34d, var(--accent-yellow));
+            color: #1f2937;
+            font-weight: 800;
+            box-shadow: 0 4px 0 #d97706, var(--shadow-gold);
+            min-height: 48px; 
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+        .game-button:hover, .game-button:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d97706, 0 0 40px rgba(251, 191, 36, 1);
+        }
+        .game-button:active {
+            box-shadow: 0 2px 0 #d97706;
+            transform: translateY(2px);
+        }
+        .game-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: 0 4px 0 #4b5563;
+            background: #4b5563;
+            color: #a1a1a1;
+            transform: none;
+            text-shadow: none;
+        }
+
+        /* --- RAINBOW STYLES --- */
+        @keyframes rainbow-text {
+            0% { color: #ff0000; } 14% { color: #ff8000; } 28% { color: #ffff00; } 
+            42% { color: #00ff00; } 56% { color: #0000ff; } 70% { color: #4b0082; } 
+            84% { color: #9400d3; } 100% { color: #ff0000; }
+        }
+        .rainbow-text {
+            animation: rainbow-text 3s linear infinite;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7); 
+        }
+
+        @keyframes rainbow-border {
+            0% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; } 
+            14% { border-color: #ff8000; box-shadow: 0 0 15px #ff8000; }
+            28% { border-color: #ffff00; box-shadow: 0 0 15px #ffff00; } 
+            42% { border-color: #00ff00; box-shadow: 0 0 15px #00ff00; }
+            56% { border-color: #0000ff; box-shadow: 0 0 15px #0000ff; }
+            70% { border-color: #4b0082; box-shadow: 0 0 15px #4b0082; }
+            84% { border-color: #9400d3; box-shadow: 0 0 15px #9400d3; }
+            100% { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        }
+        .rainbow-border {
+            border: 3px solid;
+            animation: rainbow-border 4s linear infinite;
+        }
+        
+        .market-item {
+            background-color: #262626;
+            transition: all 0.2s;
+            border-left: 5px solid #f59e0b;
+        }
+        .market-item.purchased {
+            border-left: 5px solid #10b981; 
+            background-color: #1f2937;
+            opacity: 0.7;
+        }
+        .market-item:not(.purchased):hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div id="game-container" class="shadow-2xl">
+        
+        <div id="loading-screen" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 z-50">
+            <div class="text-4xl font-black text-yellow-500 animate-pulse">BatuTycoon</div>
+            <p class="mt-4 text-gray-400">Veriler Yükleniyor...</p>
+        </div>
+
+        <div id="username-screen" class="modal-overlay z-40">
+             <div class="modal-content text-center">
+                <h2 class="text-4xl font-black text-yellow-500 mb-6">BatuTycoon Giriş</h2>
+                <p class="text-gray-300 mb-4 text-center">Lütfen kalıcı bir kullanıcı adı belirleyin.</p>
+                <input type="text" id="username-input" placeholder="Oyuncu Adınız..." class="w-full p-4 mb-6 rounded-xl bg-gray-700 border border-gray-600 text-white text-lg focus:outline-none focus:ring-4 focus:ring-yellow-500 shadow-inner">
+                <button id="start-game-button" class="game-button w-full p-4 rounded-xl text-xl">Oyuna Başla</button>
+            </div>
+        </div>
+
+        <header id="game-header" class="p-4 flex flex-col items-center bg-gray-800/90 rounded-t-xl sticky top-0 z-30 shadow-2xl transition-all duration-500">
+            <h1 id="main-title" class="text-4xl font-black text-yellow-400 mb-1 transition-colors duration-500">BatuTycoon</h1>
+            <div class="text-xs text-gray-400 mb-3 flex items-center">
+                <span id="rainbow-status-indicator" class="mr-2 text-xl hidden">🌈</span>
+                <span>BatuTycoon (Test Version V1)</span>
+            </div>
+            <div class="w-full flex justify-between items-center text-lg font-bold">
+                <div class="flex flex-col items-start">
+                    <span id="player-username" class="text-sm text-gray-300 truncate w-24">Kullanıcı: Yükleniyor</span>
+                    <span class="text-xl text-green-400">Level: <span id="player-level">1</span></span>
+                </div>
+                <div class="flex flex-col items-end">
+                    <span class="text-sm text-gray-300">Kazanç : <span id="gps-display">0</span></span>
+                    <span id="money-display-wrapper" class="text-4xl font-extrabold text-yellow-500 text-shadow-lg transition-colors duration-500">
+                        <span id="money-display">0</span> 💰
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <div id="miner-area" class="h-64 flex flex-col justify-center p-4">
+            <div class="text-center">
+                <div class="text-5xl mb-4">⛏️</div>
+                <p class="text-xl text-yellow-300 font-bold">Kazanç Çarpanı: <span id="total-multiplier">x1.00</span></p>
+                <p class="text-md text-gray-400">Derinlik: <span id="depth-level">1</span> | Madenci: <span id="miner-count-level">1</span></p>
+            </div>
+        </div>
+
+        <div class="p-4">
+            
+            <div class="flex mb-4 space-x-2 border-b border-gray-700">
+                <button data-tab="upgrades" class="tab-button text-lg px-4 py-2 font-bold rounded-t-lg bg-yellow-600 text-white shadow-lg">Geliştirmeler</button>
+                <button data-tab="market" class="tab-button text-lg px-4 py-2 font-bold rounded-t-lg bg-gray-700 text-gray-300">Pazar/Dükkan</button>
+            </div>
+            
+            <div id="upgrades-tab" class="tab-content">
+                <h2 class="text-2xl font-black text-yellow-300 mb-4 pb-2">Temel Geliştirmeler</h2>
+                
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="upgrade-card p-3 rounded-xl shadow-lg bg-gray-700">
+                        <div class="flex flex-col mb-2">
+                            <span class="text-lg font-extrabold text-yellow-400">⛏️ Madenci Hızı</span>
+                            <span id="speed-level-display" class="text-xs text-gray-300">Seviye: 1 (Çarpan: x1.00)</span>
+                        </div>
+                        <button id="upgrade-speed-button" class="game-button w-full p-2 rounded-lg text-sm">
+                            <span id="speed-cost">100</span> 💰 Yükselt
+                        </button>
+                    </div>
+
+                    <div class="upgrade-card p-3 rounded-xl shadow-lg bg-gray-700">
+                        <div class="flex flex-col mb-2">
+                            <span class="text-lg font-extrabold text-yellow-400">👷 Madenci Sayısı</span>
+                            <span id="count-level-display" class="text-xs text-gray-300">Seviye: 1 (Madenci: 1)</span>
+                        </div>
+                        <button id="upgrade-count-button" class="game-button w-full p-2 rounded-lg text-sm">
+                            <span id="count-cost">200</span> 💰 Yükselt
+                        </button>
+                    </div>
+                    
+                    <div class="upgrade-card p-3 rounded-xl shadow-lg bg-gray-700">
+                        <div class="flex flex-col mb-2">
+                            <span class="text-lg font-extrabold text-yellow-400">V Maden Derinliği</span>
+                            <span id="depth-level-display" class="text-xs text-gray-300">Seviye: 1 (Taban Kazanç +%0)</span>
+                        </div>
+                        <button id="upgrade-depth-button" class="game-button w-full p-2 rounded-lg text-sm">
+                            <span id="depth-cost">500</span> 💰 Yükselt
+                        </button>
+                    </div>
+                    
+                    <div class="upgrade-card p-3 rounded-xl shadow-lg bg-gray-700">
+                        <div class="flex flex-col mb-2">
+                            <span class="text-lg font-extrabold text-yellow-400">⬆️ Asansör Kapasitesi</span>
+                            <span id="capacity-level-display" class="text-xs text-gray-300">Seviye: 1 (Kapasite: x1.00)</span>
+                        </div>
+                        <button id="upgrade-capacity-button" class="game-button w-full p-2 rounded-lg text-sm">
+                            <span id="capacity-cost">750</span> 💰 Yükselt
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <button id="level-up-button" class="game-button w-full p-4 rounded-xl text-xl">
+                        Level Yükselt (Maliyet: <span id="level-cost">1000</span> 💰)
+                    </button>
+                </div>
+            </div>
+            
+            <div id="market-tab" class="tab-content hidden">
+                <h2 class="text-2xl font-black text-yellow-300 mb-4 pb-2">Pazar/Dükkan (Kalıcı Çarpanlar)</h2>
+                <div id="market-items-list" class="space-y-3">
+                    <p class="text-gray-400 text-center py-4">Öğeler yükleniyor...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sticky bottom-0 left-0 right-0 p-4 bg-gray-800/90 border-t border-gray-700 shadow-inner z-20">
+            <p id="message-box" class="text-center text-sm text-red-400 mb-2"></p>
+            <button id="admin-button" class="text-xs text-gray-500 hover:text-red-500 transition duration-150 w-full text-center">Yapımcı :) Batu</button>
+        </div>
+    </div>
+
+    <div id="offline-modal" class="modal-overlay">
+        <div class="modal-content text-center">
+            <h3 class="text-3xl font-black text-yellow-500 mb-4">Hoş Geldiniz!</h3>
+            <p class="text-lg text-gray-300 mb-4">Çevrimdışı kazancınız:</p>
+            <p class="text-4xl font-extrabold text-green-400 mb-6">
+                <span id="offline-money-display">0</span> 💰
+            </p>
+            <button id="close-offline-modal" class="game-button px-8 py-3 rounded-lg text-xl">Harika!</button>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-content" id="admin-modal-content">
+            <h3 class="text-2xl font-bold text-red-400 mb-4 border-b-2 border-red-700 pb-2">⚔️Admin Paneli</h3>
+            
+            <div id="admin-login" class="mb-4">
+                <p class="text-gray-300 mb-2">Lütfen şifreyi girin:</p>
+                <input type="password" id="admin-password-input" placeholder="Şifre" class="w-full p-3 mb-4 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                <button id="admin-login-button" class="game-button w-full p-3 bg-red-600 hover:bg-red-500 text-white shadow-none">Giriş Yap</button>
+            </div>
+            
+            <div id="admin-controls" class="hidden">
+                <p class="text-sm text-gray-400 mb-4">Oturum Tipi: <span class="text-yellow-400 font-bold">Yapımcı :) Batu</span></p>
+                
+                <div class="mb-6 border-t border-gray-600 pt-4">
+                    <h4 class="text-xl font-bold text-yellow-400 mb-2">Kod Gir </h4>
+                    <p class="text-xs text-gray-500 mb-2">Kodlar : BATUEFFECT~BATUHİZLİ~BATUMAXLA~BATUZENGİN~BATUTYCOONTEST</p>
+                    <input type="text" id="cheat-code-input" placeholder="Kodu Gir..." class="w-full p-3 mb-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 uppercase">
+                    <button id="apply-cheat-button" class="game-button w-full p-3 bg-yellow-600 hover:bg-yellow-500 text-white shadow-none">Kodu Uygula</button>
+                </div>
+                
+                <button id="admin-cheat-money" class="game-button w-full p-3 mb-3 bg-green-600 hover:bg-green-500 text-white shadow-none">10 Milyon 💰 Ekle</button>
+                <button id="admin-cheat-max-all" class="game-button w-full p-3 mb-3 bg-purple-600 hover:bg-purple-500 text-white shadow-none">Max Level & Tüm Geliştirmeler</button>
+                <button id="admin-cheat-unlock-market" class="game-button w-full p-3 mb-3 bg-blue-600 hover:bg-blue-500 text-white shadow-none">Tüm Pazar Öğelerini Al</button>
+                <button id="admin-reset-data" class="game-button w-full p-3 mb-4 bg-gray-600 hover:bg-gray-500 text-white shadow-none">Verileri TAMAMEN Sıfırla</button>
+                <button id="admin-close" class="game-button w-full p-3 bg-red-400 hover:bg-red-300 text-white shadow-none">Paneli Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Game Variables ---
+        let gameLoopInterval = null;
+
+        const ADMIN_PASSWORD = "BatuTycoon";
+        const LOCAL_STORAGE_KEY = 'batu_tycoon_data';
+
+        // Game State (Default Values)
+        let game = {
+            username: '',
+            money: 0,
+            level: 1,
+            speedLevel: 1,
+            minerCountLevel: 1,
+            shaftDepthLevel: 1,
+            elevatorCapacityLevel: 1,
+            lastSaveTime: Date.now(),
+            isRainbowMode: false,
+            purchases: {},
+        };
+
+        // --- Market Items (Aynı kaldı) ---
+        const MARKET_ITEMS = [
+            { key: 'M01', name: 'Micro Yatırımcı', cost: 10000, multiplier: 1.05, category: 'Yatırım', icon: '📈' },
+            { key: 'M02', name: 'Kripto Fonu', cost: 50000, multiplier: 1.10, category: 'Yatırım', icon: '₿' },
+            { key: 'M03', name: 'Gayrimenkul İmparatoru', cost: 250000, multiplier: 1.15, category: 'Yatırım', icon: '🏠' },
+            { key: 'M04', name: 'Borsa Sihirbazı', cost: 1000000, multiplier: 1.20, category: 'Yatırım', icon: '📊' },
+            { key: 'M05', name: 'Gelecek Sözleşmesi', cost: 5000000, multiplier: 1.25, category: 'Yatırım', icon: '📜' },
+            
+            { key: 'T06', name: 'Gelişmiş Sondaj Ucu', cost: 15000, multiplier: 1.07, category: 'Teknoloji', icon: '🔩' },
+            { key: 'T07', name: 'Titanyum Kovalar', cost: 75000, multiplier: 1.12, category: 'Teknoloji', icon: '🪣' },
+            { key: 'T08', name: 'Yapay Zeka Navigasyon', cost: 300000, multiplier: 1.18, category: 'Teknoloji', icon: '🤖' },
+            { key: 'T09', name: 'Anti-Yerçekimi Taşıyıcı', cost: 1200000, multiplier: 1.22, category: 'Teknoloji', icon: '🛸' },
+            { key: 'T10', name: 'Nükleer Enerji Santrali', cost: 6000000, multiplier: 1.30, category: 'Teknoloji', icon: '⚛️' },
+            
+            { key: 'P11', name: 'Uzman Jeolog', cost: 20000, multiplier: 1.06, category: 'Personel', icon: '🔬' },
+            { key: 'P12', name: 'Güvenlik Takımı', cost: 90000, multiplier: 1.11, category: 'Personel', icon: '🛡️' },
+            { key: 'P13', name: 'Liderlik Eğitimi', cost: 400000, multiplier: 1.16, category: 'Personel', icon: '🎓' },
+            { key: 'P14', name: 'Süpervizör Robot', cost: 1500000, multiplier: 1.21, category: 'Personel', icon: '⚙️' },
+            { key: 'P15', name: 'Yönetim Merkezi', cost: 7000000, multiplier: 1.27, category: 'Personel', icon: '🏛️' },
+            
+            { key: 'L16', name: 'Genişletilmiş Depo', cost: 30000, multiplier: 1.08, category: 'Altyapı', icon: '📦' },
+            { key: 'L17', name: 'Hızlı Tren Lojistik', cost: 110000, multiplier: 1.13, category: 'Altyapı', icon: '🚆' },
+            { key: 'L18', name: 'Otomasyon Hattı', cost: 500000, multiplier: 1.19, category: 'Altyapı', icon: '⛓️' },
+            { key: 'L19', name: 'Uydu İzleme', cost: 2000000, multiplier: 1.23, category: 'Altyapı', icon: '🛰️' },
+            { key: 'L20', name: 'Uzay Limanı', cost: 10000000, multiplier: 1.35, category: 'Altyapı', icon: '🚀' },
+
+            { key: 'C21', name: 'Altın Kaplama Kazma', cost: 40000, multiplier: 1.04, category: 'Prestij', icon: '🥇' },
+            { key: 'C22', name: 'Özel Logolu Kask', cost: 150000, multiplier: 1.05, category: 'Prestij', icon: '⭐' },
+            { key: 'C23', name: 'Madenci Heykeli', cost: 600000, multiplier: 1.06, category: 'Prestij', icon: '🗿' },
+            { key: 'C24', name: 'Bölgesel Sponsorluk', cost: 2500000, multiplier: 1.07, category: 'Prestij', icon: '📰' },
+            { key: 'C25', name: 'Dünya Merkezi', cost: 12000000, multiplier: 1.08, category: 'Prestij', icon: '🌍' },
+            
+            { key: 'B26', name: 'Mega Verimlilik Şeması', cost: 15000000, multiplier: 1.50, category: 'Bonus', icon: '✨' },
+            { key: 'B27', name: 'Kara Delik Simülatörü', cost: 30000000, multiplier: 1.75, category: 'Bonus', icon: '⚫' },
+            
+            { key: 'E28', name: 'Batu\'nun Şans Tılsımı', cost: 50000000, multiplier: 2.00, category: 'Özel', icon: '🍀' },
+            { key: 'E29', name: 'Sonsuz Enerji Pili', cost: 100000000, multiplier: 2.50, category: 'Özel', icon: '🔋' },
+            { key: 'E30', name: 'Zaman Bükücü', cost: 200000000, multiplier: 3.00, category: 'Özel', icon: '⏳' },
+            { key: 'E31', name: 'Anti-Kriz Sigortası', cost: 300000000, multiplier: 3.50, category: 'Özel', icon: '🛡️' },
+            { key: 'E32', name: 'Kainatın Anahtarı', cost: 500000000, multiplier: 4.00, category: 'Özel', icon: '🔑' },
+            { key: 'E33', name: 'Gökkuşağı Patlaması', cost: 750000000, multiplier: 5.00, category: 'Özel', icon: '🌈' },
+            { key: 'E34', name: 'Evrensel Kaynak', cost: 1000000000, multiplier: 10.00, category: 'Özel', icon: '🌌' },
+        ];
+
+
+        // Constants and Cost Calculation Functions
+        // KANKA BURAYI DEĞİŞTİRDİM: BASE_RATE = 50. 
+        // 20 * 5 saniye = 100 Para eder.
+        const BASE_RATE = 50; 
+        const MAX_LEVEL = 50; 
+        const MAX_UPGRADE_LEVEL = 50; 
+        const RAINBOW_CODES = {
+            "BATUEFFECT": { effect: "toggle_rainbow", message: "Gökkuşağı Efekti Açıldı/Kapandı!", fn: () => { game.isRainbowMode = !game.isRainbowMode; updateRainbowEffect(); } },
+            "BATUHİZLİ": { effect: "speed_max", message: `Madenci Hızı MAX (${MAX_UPGRADE_LEVEL}) yapıldı!`, fn: () => { game.speedLevel = MAX_UPGRADE_LEVEL; } },
+            "BATUZENGİN": { effect: "add_1B", message: "1 Milyar (1G) Para Eklendi!", fn: () => { game.money += 1000000000; } },
+            "BATUTYCOONTEST": { effect: "max_all", message: `Tüm Temel Geliştirmeler MAX yapıldı!`, fn: () => { game.speedLevel = MAX_UPGRADE_LEVEL; game.minerCountLevel = MAX_UPGRADE_LEVEL; game.shaftDepthLevel = MAX_UPGRADE_LEVEL; game.elevatorCapacityLevel = MAX_UPGRADE_LEVEL; } },
+            "BATUMAXLA": { effect: "unlock_market", message: "Tüm Pazar Öğeleri Ücretsiz Alındı!", fn: () => { MARKET_ITEMS.forEach(item => { game.purchases[item.key] = true; }); } }
+        };
+
+        const getSpeedCost = (level) => Math.floor(100 * (1.5 ** (level - 1)));
+        const getCountCost = (level) => Math.floor(200 * (1.6 ** (level - 1)));
+        const getDepthCost = (level) => Math.floor(500 * (1.7 ** (level - 1)));
+        const getCapacityCost = (level) => Math.floor(750 * (1.8 ** (level - 1)));
+        const getLevelCost = (level) => Math.floor(1000 * (1.9 ** (level - 1)));
+
+        // --- LocalStorage Persistence Functions ---
+
+        /**
+         * Loads game data from localStorage.
+         * @returns {boolean} True if data was found and loaded, false otherwise.
+         */
+        function loadGameData() {
+            // Veriyi localStorage'dan çek
+            const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+            
+            document.getElementById('loading-screen').classList.add('hidden');
+
+            if (savedData) {
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    
+                    // Verileri yükle ve varsayılan değerleri sağla
+                    game.username = parsedData.username || '';
+                    game.money = parsedData.money || 0;
+                    game.level = Math.min(parsedData.level || 1, MAX_LEVEL); 
+                    game.speedLevel = Math.min(parsedData.speedLevel || 1, MAX_UPGRADE_LEVEL);
+                    game.minerCountLevel = Math.min(parsedData.minerCountLevel || 1, MAX_UPGRADE_LEVEL);
+                    game.shaftDepthLevel = Math.min(parsedData.shaftDepthLevel || 1, MAX_UPGRADE_LEVEL);
+                    game.elevatorCapacityLevel = Math.min(parsedData.elevatorCapacityLevel || 1, MAX_UPGRADE_LEVEL);
+                    game.isRainbowMode = parsedData.isRainbowMode || false; 
+                    game.purchases = parsedData.purchases || {}; 
+                    
+                    // Çevrimdışı kazancı hesapla
+                    const savedTime = parsedData.lastSaveTime || Date.now();
+                    calculateOfflineEarning(savedTime);
+                    
+                    return true; // Veri bulundu
+                } catch (e) {
+                    console.error("localStorage verisi çözümlenirken hata:", e);
+                    // Veri bozuksa sıfırdan başla
+                    return false;
+                }
+            }
+            return false; // Veri bulunamadı
+        }
+
+        /**
+         * Saves current game state to localStorage.
+         */
+        function saveGameData() {
+            game.lastSaveTime = Date.now();
+            try {
+                // Oyunu JSON string'ine çevirip kaydet
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(game));
+            } catch (error) {
+                console.error("Veri localStorage'a kaydedilirken hata:", error);
+                showMessage("Kayıt hatası! Tarayıcınız dolu olabilir.", 'red');
+            }
+        }
+        
+        // --- Game Flow ---
+
+        function checkUsernameAndStart() {
+            // Veri yüklenmediyse ve kullanıcı adı yoksa giriş ekranını göster
+            if (!game.username) {
+                document.getElementById('username-screen').style.display = 'flex'; 
+            } else {
+                // Kullanıcı adı varsa oyunu başlat
+                startGame();
+            }
+        }
+
+        function startGame() {
+            document.getElementById('username-screen').style.display = 'none'; 
+            
+            // Arayüzü ayarla ve oyun döngüsünü başlat
+            setupTabs();
+            renderMarketItems();
+            updateRainbowEffect();
+            updateUI();
+            
+            // Önceki döngüyü temizle ve yenisini başlat
+            if (gameLoopInterval) clearInterval(gameLoopInterval);
+            gameLoopInterval = setInterval(gameLoop, 1000); 
+
+            // Düzenli kaydetme (her 15 saniyede bir)
+            setInterval(saveGameData, 15000); 
+        }
+        
+        // --- Game Mechanics (Aynı kaldı) ---
+        
+        function performUpgrade(costFunc, levelKey, name, maxLevel) {
+            const currentLevel = game[levelKey];
+            if (currentLevel >= maxLevel) {
+                showMessage(`Maksimum ${name} seviyesine ulaşıldı.`, 'yellow');
+                return;
+            }
+            const cost = costFunc(currentLevel);
+
+            if (game.money >= cost) {
+                game.money -= cost;
+                game[levelKey]++;
+                showMessage(`${name} yükseltildi! Seviye: ${game[levelKey]}`, 'green');
+            } else {
+                showMessage(`Yetersiz Para! ${formatNumber(cost)} 💰 gerekli.`, 'red');
+            }
+            updateUI();
+            saveGameData(); // LocalStorage'a kaydet
+        }
+
+
+        function calculateGPS() {
+            const depthMultiplier = 1 + (0.20 * (game.shaftDepthLevel - 1));
+            const baseEarning = BASE_RATE * depthMultiplier;
+
+            const speedMultiplier = 1 + (0.1 * (game.speedLevel - 1));
+            const minerCount = game.minerCountLevel;
+            const capacityMultiplier = 1 + (0.15 * (game.elevatorCapacityLevel - 1));
+
+            let marketMultiplier = 1.0;
+            MARKET_ITEMS.forEach(item => {
+                if (game.purchases[item.key]) {
+                    marketMultiplier *= item.multiplier;
+                }
+            });
+
+            const gps = baseEarning * speedMultiplier * minerCount * capacityMultiplier * marketMultiplier;
+            
+            game.totalMultiplier = marketMultiplier; 
+            
+            return Math.floor(gps);
+        }
+
+        function gameLoop() {
+            const gps = calculateGPS();
+            game.money += gps;
+            updateUI();
+        }
+
+        function calculateOfflineEarning(savedTime) {
+            const currentTime = Date.now();
+            const timeElapsedSeconds = Math.floor((currentTime - savedTime) / 1000);
+
+            if (timeElapsedSeconds > 5) { // Minimum 5 saniye bekleme süresi
+                const offlineGPS = calculateGPS(); 
+                const offlineEarnings = offlineGPS * timeElapsedSeconds;
+                
+                game.money += offlineEarnings;
+
+                if (offlineEarnings > 0) {
+                    document.getElementById('offline-money-display').textContent = formatNumber(offlineEarnings);
+                    document.getElementById('offline-modal').style.display = 'flex';
+                }
+            }
+        }
+        
+        function buyMarketItem(itemKey) {
+            if (game.purchases[itemKey]) {
+                showMessage('Bu öğeye zaten sahipsiniz!', 'yellow');
+                return;
+            }
+
+            const item = MARKET_ITEMS.find(i => i.key === itemKey);
+            if (!item) return;
+
+            if (game.money >= item.cost) {
+                game.money -= item.cost;
+                game.purchases[itemKey] = true;
+                showMessage(`${item.name} satın alındı! Kazanç çarpanı arttı.`, 'green');
+                updateUI();
+                renderMarketItems(); 
+                saveGameData(); // LocalStorage'a kaydet
+            } else {
+                showMessage(`Yetersiz Para! ${formatNumber(item.cost)} 💰 gerekli.`, 'red');
+            }
+        }
+
+
+        // --- UI and Animation Operations (Aynı kaldı) ---
+
+        function formatNumber(num) {
+            if (num >= 1e15) return (num / 1e15).toFixed(2) + 'P';
+            if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+            if (num >= 1e9) return (num / 1e9).toFixed(2) + 'G';
+            if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+            return Math.floor(num).toLocaleString('tr-TR');
+        }
+
+        function updateUI() {
+            const gps = calculateGPS();
+
+            document.getElementById('money-display').textContent = formatNumber(game.money);
+            document.getElementById('gps-display').textContent = formatNumber(gps);
+            document.getElementById('player-level').textContent = game.level;
+            document.getElementById('player-username').textContent = `Kullanıcı: ${game.username || 'Anonim'}`;
+            document.getElementById('depth-level').textContent = game.shaftDepthLevel;
+            document.getElementById('miner-count-level').textContent = game.minerCountLevel;
+            
+            const totalMultiplier = MARKET_ITEMS.reduce((total, item) => 
+                game.purchases[item.key] ? total * item.multiplier : total, 1.0);
+            document.getElementById('total-multiplier').textContent = `x${totalMultiplier.toFixed(2)}`;
+            
+            updateUpgradeButton('speed', getSpeedCost, game.speedLevel, MAX_UPGRADE_LEVEL, 'speed-level-display', 
+                (level) => `Seviye: ${level} (Çarpan: x${(1 + 0.1 * (level - 1)).toFixed(2)})`);
+            updateUpgradeButton('count', getCountCost, game.minerCountLevel, MAX_UPGRADE_LEVEL, 'count-level-display', 
+                (level) => `Seviye: ${level} (Madenci: ${level})`);
+            updateUpgradeButton('depth', getDepthCost, game.shaftDepthLevel, MAX_UPGRADE_LEVEL, 'depth-level-display',
+                (level) => `Seviye: ${level} (Taban Kazanç +%${((level - 1) * 20)})`);
+            updateUpgradeButton('capacity', getCapacityCost, game.elevatorCapacityLevel, MAX_UPGRADE_LEVEL, 'capacity-level-display',
+                (level) => `Seviye: ${level} (Kapasite: x${(1 + 0.15 * (level - 1)).toFixed(2)})`);
+            
+            const levelCost = getLevelCost(game.level);
+            const levelBtn = document.getElementById('level-up-button');
+            document.getElementById('level-cost').textContent = formatNumber(levelCost);
+            levelBtn.disabled = game.money < levelCost || game.level >= MAX_LEVEL;
+            levelBtn.innerHTML = game.level >= MAX_LEVEL 
+                ? `MAKSİMUM LEVEL (${MAX_LEVEL})` 
+                : `Level Yükselt (Maliyet: <span id="level-cost">${formatNumber(levelCost)}</span> 💰)`;
+            
+            updateMarketButtonStates();
+        }
+
+        function updateUpgradeButton(name, costFunc, currentLevel, maxLevel, displayId, displayFormatter) {
+            const cost = costFunc(currentLevel);
+            const btn = document.getElementById(`upgrade-${name}-button`);
+            const costSpan = document.getElementById(`${name}-cost`);
+            const displaySpan = document.getElementById(displayId);
+
+            displaySpan.textContent = displayFormatter(currentLevel);
+            
+            if (currentLevel >= maxLevel) {
+                btn.disabled = true;
+                costSpan.textContent = 'MAX';
+                btn.innerHTML = `MAX (${maxLevel})`;
+            } else {
+                costSpan.textContent = formatNumber(cost);
+                btn.disabled = game.money < cost;
+            }
+        }
+        
+        function renderMarketItems() {
+            const list = document.getElementById('market-items-list');
+            list.innerHTML = '';
+            
+            let currentCategory = '';
+            
+            MARKET_ITEMS.forEach(item => {
+                if (item.category !== currentCategory) {
+                    currentCategory = item.category;
+                    const header = document.createElement('h3');
+                    header.className = 'text-xl font-bold text-gray-200 mt-4 mb-2 border-b border-gray-600 pb-1';
+                    header.textContent = `${item.icon} ${item.category}`;
+                    list.appendChild(header);
+                }
+
+                const isPurchased = game.purchases[item.key];
+                const itemDiv = document.createElement('div');
+                itemDiv.id = `market-item-${item.key}`;
+                itemDiv.className = `market-item p-3 rounded-xl shadow-md flex justify-between items-center ${isPurchased ? 'purchased' : 'bg-gray-800'}`;
+                
+                itemDiv.innerHTML = `
+                    <div>
+                        <p class="text-lg font-bold ${isPurchased ? 'text-green-400' : 'text-yellow-300'}">${item.icon} ${item.name}</p>
+                        <p class="text-xs text-gray-400">Kalıcı Çarpan: x${item.multiplier.toFixed(2)}</p>
+                    </div>
+                    <button 
+                        data-key="${item.key}"
+                        class="market-buy-button game-button p-2 rounded-lg text-sm ml-2 w-24 transition-all duration-150 ${isPurchased ? 'bg-green-600 hover:bg-green-600' : ''}"
+                        ${isPurchased ? 'disabled' : ''}
+                    >
+                        ${isPurchased ? 'ALINDI' : `${formatNumber(item.cost)} 💰`}
+                    </button>
+                `;
+                
+                list.appendChild(itemDiv);
+            });
+            
+            list.querySelectorAll('.market-buy-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const key = e.currentTarget.getAttribute('data-key');
+                    buyMarketItem(key);
+                });
+            });
+            
+            updateMarketButtonStates(); 
+        }
+        
+        function updateMarketButtonStates() {
+            document.querySelectorAll('.market-buy-button').forEach(button => {
+                const key = button.getAttribute('data-key');
+                const item = MARKET_ITEMS.find(i => i.key === key);
+                
+                if (game.purchases[key] || !item) {
+                    button.disabled = true;
+                    button.textContent = 'ALINDI';
+                    button.parentElement.classList.add('purchased');
+                } else {
+                    const canBuy = game.money >= item.cost;
+                    button.disabled = !canBuy;
+                    button.textContent = `${formatNumber(item.cost)} 💰`;
+                    button.parentElement.classList.remove('purchased');
+                }
+            });
+        }
+
+
+        function updateRainbowEffect() {
+            const container = document.getElementById('game-container');
+            const moneyDisplay = document.getElementById('money-display-wrapper');
+            const mainTitle = document.getElementById('main-title');
+            const indicator = document.getElementById('rainbow-status-indicator');
+            const header = document.getElementById('game-header');
+            const adminModal = document.getElementById('admin-modal-content');
+            
+            if (game.isRainbowMode) {
+                moneyDisplay.classList.add('rainbow-text');
+                mainTitle.classList.add('rainbow-text');
+                indicator.classList.remove('hidden');
+                header.classList.add('rainbow-border');
+                adminModal.classList.add('rainbow-border');
+                container.style.backgroundColor = 'var(--rainbow-bg)'; 
+            } else {
+                moneyDisplay.classList.remove('rainbow-text');
+                mainTitle.classList.remove('rainbow-text');
+                indicator.classList.add('hidden');
+                header.classList.remove('rainbow-border');
+                adminModal.classList.remove('rainbow-border');
+                container.style.backgroundColor = 'var(--secondary-dark)';
+            }
+        }
+
+        function showMessage(msg, color) {
+            const msgBox = document.getElementById('message-box');
+            msgBox.textContent = msg;
+            msgBox.className = `text-center text-sm mb-2 text-${color}-400 font-semibold animate-pulse`; 
+            setTimeout(() => {
+                msgBox.textContent = '';
+                msgBox.className = `text-center text-sm mb-2 text-red-400`;
+            }, 2500);
+        }
+        
+        // --- Admin Panel (Aynı kaldı) ---
+        function showAdminModal() {
+            document.getElementById('admin-modal').style.display = 'flex';
+            document.getElementById('admin-password-input').value = '';
+            document.getElementById('admin-login').classList.remove('hidden');
+            document.getElementById('admin-controls').classList.add('hidden');
+            document.getElementById('cheat-code-input').value = ''; 
+        }
+
+        function adminLogin() {
+            const password = document.getElementById('admin-password-input').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('admin-login').classList.add('hidden');
+                document.getElementById('admin-controls').classList.remove('hidden');
+                showMessage("Admin Girişi Başarılı!", 'green');
+            } else {
+                showMessage("Admin Şifresi Yanlış!", 'red');
+                document.getElementById('admin-password-input').value = '';
+            }
+        }
+
+        function adminCheatMoney() {
+            game.money += 10000000; 
+            updateUI();
+            saveGameData();
+            showMessage("1M Para Eklendi!", 'green');
+        }
+
+        function adminCheatMaxAll() {
+            game.level = MAX_LEVEL;
+            game.speedLevel = MAX_UPGRADE_LEVEL;
+            game.minerCountLevel = MAX_UPGRADE_LEVEL;
+            game.shaftDepthLevel = MAX_UPGRADE_LEVEL;
+            game.elevatorCapacityLevel = MAX_UPGRADE_LEVEL;
+            updateUI();
+            saveGameData();
+            showMessage(`Temel Geliştirmeler MAX'landı!`, 'green');
+        }
+        
+        function adminCheatUnlockMarket() {
+            MARKET_ITEMS.forEach(item => {
+                game.purchases[item.key] = true;
+            });
+            updateUI();
+            renderMarketItems();
+            saveGameData();
+            showMessage("Tüm Pazar Öğeleri Alındı!", 'green');
+        }
+
+        function adminResetData() {
+            // Note: Since we cannot use confirm/alert, we use a prompt as a stand-in confirmation
+            const confirmation = prompt('TÜM VERİLERİ SIFIRLAMAK İÇİN "Sıfırla" yazın. (Kullanıcı adı hariç)');
+            if (confirmation !== 'Sıfırla') {
+                showMessage('Sıfırlama iptal edildi.', 'yellow');
+                return;
+            }
+            
+            // Veri sıfırlama
+            game = {
+                username: game.username, // Kullanıcı adını koru
+                money: 0,
+                level: 1,
+                speedLevel: 1,
+                minerCountLevel: 1,
+                shaftDepthLevel: 1,
+                elevatorCapacityLevel: 1,
+                lastSaveTime: Date.now(),
+                isRainbowMode: false,
+                purchases: {}, 
+            };
+            
+            // LocalStorage'dan tamamen sil
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
+            
+            updateRainbowEffect();
+            saveGameData();
+            
+            document.getElementById('admin-modal').style.display = 'none';
+            updateUI();
+            renderMarketItems();
+            showMessage("Veriler Sıfırlandı! Yeni bir başlangıç yapıldı.", 'red');
+        }
+        
+        function setupTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('bg-yellow-600', 'text-white');
+                        btn.classList.add('bg-gray-700', 'text-gray-300');
+                    });
+                    button.classList.add('bg-yellow-600', 'text-white');
+                    button.classList.remove('bg-gray-700', 'text-gray-300');
+
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    document.getElementById(`${targetTab}-tab`).classList.remove('hidden');
+                });
+            });
+        }
+
+
+        // --- Event Listeners ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Veriyi yükle ve kullanıcı adı kontrolü yap
+            loadGameData();
+            checkUsernameAndStart();
+            
+            // Kullanıcı Adı Girişi
+            document.getElementById('start-game-button').addEventListener('click', () => {
+                const username = document.getElementById('username-input').value.trim();
+                if (username.length > 2 && username.length < 20) {
+                    game.username = username;
+                    saveGameData();
+                    startGame();
+                } else {
+                    showMessage("Kullanıcı adı 3-20 karakter arasında olmalı.", 'red');
+                }
+            });
+
+            // Yükseltme Butonları
+            document.getElementById('upgrade-speed-button').addEventListener('click', () => 
+                performUpgrade(getSpeedCost, 'speedLevel', 'Madenci Hızı', MAX_UPGRADE_LEVEL));
+            document.getElementById('upgrade-count-button').addEventListener('click', () => 
+                performUpgrade(getCountCost, 'minerCountLevel', 'Madenci Sayısı', MAX_UPGRADE_LEVEL));
+            document.getElementById('upgrade-depth-button').addEventListener('click', () => 
+                performUpgrade(getDepthCost, 'shaftDepthLevel', 'Maden Derinliği', MAX_UPGRADE_LEVEL));
+            document.getElementById('upgrade-capacity-button').addEventListener('click', () => 
+                performUpgrade(getCapacityCost, 'elevatorCapacityLevel', 'Asansör Kapasitesi', MAX_UPGRADE_LEVEL));
+            document.getElementById('level-up-button').addEventListener('click', () => 
+                performUpgrade(getLevelCost, 'level', 'Level', MAX_LEVEL));
+            
+            // Çevrimdışı Modal Kapatma
+            document.getElementById('close-offline-modal').addEventListener('click', () => {
+                document.getElementById('offline-modal').style.display = 'none';
+            });
+
+            // Admin Butonları
+            document.getElementById('admin-button').addEventListener('click', showAdminModal);
+            document.getElementById('admin-login-button').addEventListener('click', adminLogin);
+            
+            document.getElementById('apply-cheat-button').addEventListener('click', () => {
+                const code = document.getElementById('cheat-code-input').value.trim().toUpperCase();
+                const cheat = RAINBOW_CODES[code];
+                if (cheat) {
+                    cheat.fn();
+                    showMessage(`[Hile Aktif] ${cheat.message}`, 'yellow');
+                } else {
+                    showMessage(`Hile Kodu Geçersiz!`, 'red');
+                }
+                document.getElementById('cheat-code-input').value = '';
+                updateUI();
+                renderMarketItems(); 
+                saveGameData();
+            });
+            
+            document.getElementById('cheat-code-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('apply-cheat-button').click();
+                }
+            });
+
+            document.getElementById('admin-cheat-money').addEventListener('click', adminCheatMoney);
+            document.getElementById('admin-cheat-max-all').addEventListener('click', adminCheatMaxAll);
+            document.getElementById('admin-cheat-unlock-market').addEventListener('click', adminCheatUnlockMarket);
+            document.getElementById('admin-reset-data').addEventListener('click', adminResetData);
+            document.getElementById('admin-close').addEventListener('click', () => {
+                document.getElementById('admin-modal').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
