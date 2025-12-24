@@ -1,14 +1,14 @@
 {
   "maintenance": false,
-  "message": "Enjoying Cracker",
+  "message": "Welcome BatuTeam",
   "keys": {
-    "TG : @BatuX28": {
+    "TG:@BatuX28": {
       "status": "valid",
-      "expiry": "2025-26-26T55:55:55"
+      "expiry": "2025-12-26T23:59:59"
     },
     "BatuVip": {
       "status": "valid",
-      "expiry": "2025-25-23T55:55:55"
+      "expiry": "2025-12-23T23:59:59"
     }
   }
 }
