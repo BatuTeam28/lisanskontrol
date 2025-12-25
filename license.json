@@ -1,14 +1,34 @@
 {
   "maintenance": false,
-  "message": "Welcome BatuEnginePowee",
+  "message": "Mod Maintenance Break",
   "keys": {
     "@BatuX28": {
       "status": "valid",
-      "expiry": "2026-00-26T23:59:59"
+      "expiry": "2026-12-25T23:00:00"
     },
-    "BatuVip": {
+    "BOS": {
       "status": "valid",
-      "expiry": "2026-00-23T23:59:59"
+      "expiry": "2026-12-20T00:00:00"
+    },
+    "BOS": {
+      "status": "valid",
+      "expiry": "2025-12-20T00:00:00"
+    },
+    "BOS": {
+      "status": "valid",
+      "expiry": "2025-1-24T00:00:00"
+    },
+    "BOS": {
+      "status": "valid",
+      "expiry": "2025-1-3T00:00:00"
+    },
+    "BOS": {
+      "status": "valid",
+      "expiry": "2025-1-12T00:00:00"
+    },
+    "BOS": {
+      "status": "valid",
+      "expiry": "2025-2-25T00:00:00"
     }
   }
 }
