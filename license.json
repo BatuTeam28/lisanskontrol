@@ -1,14 +1,9 @@
-{
-  "maintenance": false,
-  "message": "Welcome BatuEnginePowee",
-  "keys": {
-    "@BatuX28": {
-      "status": "valid",
-      "expiry": "2026-00-26T23:59:59"
-    },
-    "BatuVip": {
-      "status": "valid",
-      "expiry": "2026-00-23T23:59:59"
-    }
-  }
+// Eski (GitHub) URL'si yerine yenisi:
+string panelURL = "https://batu.x10.mx/connect?key=" + userEnteredKey;
+
+// Panelden gelen yanıtı kontrol et:
+if (response.contains("\"status\": \"valid\"")) {
+    // Giriş başarılı, hileyi başlat
+} else {
+    // Hata ver, üyeliği sonlandır
 }
