@@ -1,9 +1,37 @@
-// Eski (GitHub) URL'si yerine yenisi:
-string panelURL = "https://batu.x10.mx/connect?key=" + userEnteredKey;
+#include <windows.h>
+#include <wininet.h>
+#include <string>
 
-// Panelden gelen yanıtı kontrol et:
-if (response.contains("\"status\": \"valid\"")) {
-    // Giriş başarılı, hileyi başlat
-} else {
-    // Hata ver, üyeliği sonlandır
+#pragma comment(lib, "wininet.lib")
+
+// Eski GitHub linkini bununla değiştiriyoruz
+std::string licenseURL = "https://batu.x10.mx/connect";
+
+bool CheckLicense() {
+    HINTERNET hInternet = InternetOpenA("BatuEngine", INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0);
+    if (!hInternet) return false;
+
+    HINTERNET hUrl = InternetOpenUrlA(hInternet, licenseURL.c_str(), NULL, 0, INTERNET_FLAG_RELOAD, 0);
+    if (!hUrl) {
+        InternetCloseHandle(hInternet);
+        return false;
+    }
+
+    char buffer[1024];
+    DWORD bytesRead;
+    std::string content;
+
+    while (InternetReadFile(hUrl, buffer, sizeof(buffer), &bytesRead) && bytesRead > 0) {
+        content.append(buffer, bytesRead);
+    }
+
+    InternetCloseHandle(hUrl);
+    InternetCloseHandle(hInternet);
+
+    // Eğer panelden gelen veride "valid" kelimesi geçiyorsa giriş onaylanır
+    if (content.find("\"status\": \"valid\"") != std::string::npos) {
+        return true;
+    }
+
+    return false;
 }
