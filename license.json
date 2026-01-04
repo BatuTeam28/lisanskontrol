@@ -1,0 +1,7 @@
+{
+  "maintenance": false,
+  "message": "Sunucuya Baglaniliyor...",
+  "panel_system": true,
+  "server_api": "https://batu.x10.mx/connect",
+  "site_url": "https://batu.x10.mx/"
+}
