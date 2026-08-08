@@ -1,0 +1,12 @@
+{
+  "VIP_ORNEX1": {
+    "active": true,
+    "expiry": "2026-12-31",
+    "device": null
+  },
+  "VIP_ORNEX2": {
+    "active": true,
+    "expiry": "2026-12-31",
+    "device": null
+  }
+}
